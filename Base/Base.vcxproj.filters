@@ -126,6 +126,9 @@
     <ClCompile Include="Source\WeaponInfo\Throw.cpp">
       <Filter>WeaponInfo</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Projectile\Present.cpp">
+      <Filter>Projectile</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="Source\WeaponInfo\Throw.h">
       <Filter>WeaponInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Projectile\Present.h">
+      <Filter>Projectile</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

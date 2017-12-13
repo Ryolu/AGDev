@@ -24,6 +24,7 @@
     <ClCompile Include="Source\PlayerInfo\PlayerInfo.cpp" />
     <ClCompile Include="Source\Projectile\Grenade.cpp" />
     <ClCompile Include="Source\Projectile\Laser.cpp" />
+    <ClCompile Include="Source\Projectile\Present.cpp" />
     <ClCompile Include="Source\Projectile\Projectile.cpp" />
     <ClCompile Include="Source\SceneGraph\SceneGraph.cpp" />
     <ClCompile Include="Source\SceneGraph\SceneNode.cpp" />
@@ -54,6 +55,7 @@
     <ClInclude Include="Source\PlayerInfo\PlayerInfo.h" />
     <ClInclude Include="Source\Projectile\Grenade.h" />
     <ClInclude Include="Source\Projectile\Laser.h" />
+    <ClInclude Include="Source\Projectile\Present.h" />
     <ClInclude Include="Source\Projectile\Projectile.h" />
     <ClInclude Include="Source\SceneGraph\SceneGraph.h" />
     <ClInclude Include="Source\SceneGraph\SceneNode.h" />
