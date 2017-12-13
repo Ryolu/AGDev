@@ -37,10 +37,14 @@ public:
 	bool isJumpUpwards(void);
 	// Returns true if the player is on freefall
 	bool isFreeFall(void);
+	// Flying 
+	bool isFlying();
 	// Set the player's status to free fall mode
 	void SetOnFreeFall(bool isOnFreeFall);
 	// Set the player to jumping upwards
 	void SetToJumpUpwards(bool isOnJumpUpwards);
+	// Set the player to flying
+	void SetToFlying(bool isFlying);
 	// Stop the player's vertical movement
 	void StopVerticalMovement(void);
 	// Reset this player instance to default
@@ -86,6 +90,8 @@ public:
 	void UpdateJumpUpwards(double dt = 0.0333f);
 	// Update FreeFall
 	void UpdateFreeFall(double dt = 0.0333f);
+	// Update Flying
+	void UpdateFlying(double dt = 0.0333f);
 	// Update
 	void Update(double dt = 0.0333f);
 
@@ -112,6 +118,8 @@ private:
 	double m_dFallSpeed;
 	bool m_bFallDownwards;
 	double m_dFallAcceleration;
+
+	bool m_bFlying;
 
 	FPSCamera* attachedCamera;
 

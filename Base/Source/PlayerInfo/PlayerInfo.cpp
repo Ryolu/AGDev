@@ -8,6 +8,7 @@
 #include "../WeaponInfo/Pistol.h"
 #include "../WeaponInfo/LaserBlaster.h"
 #include "../WeaponInfo/GrenadeThrow.h"
+#include "../WeaponInfo/Throw.h"
 
 // Allocating and initializing CPlayerInfo's static data member.  
 // The pointer is allocated but not the object's constructor.
@@ -17,11 +18,12 @@ CPlayerInfo::CPlayerInfo(void)
 	: m_dSpeed(40.0)
 	, m_dAcceleration(10.0)
 	, m_bJumpUpwards(false)
-	, m_dJumpSpeed(75.0)
-	, m_dJumpAcceleration(-10.0)
+	, m_dJumpSpeed(25.0)
+	, m_dJumpAcceleration(-25.0)
 	, m_bFallDownwards(false)
 	, m_dFallSpeed(0.0)
-	, m_dFallAcceleration(-10.0)
+	, m_dFallAcceleration(-25.0)
+	, m_bFlying(false)
 	, attachedCamera(NULL)
 	, m_pTerrain(NULL)
 	, primaryWeapon(NULL)
@@ -62,19 +64,14 @@ void CPlayerInfo::Init(void)
 	minBoundary.Set(-1, -1, -1);
 
 	// Set the pistol as the primary weapon
-	primaryWeapon = new CPistol();
+	primaryWeapon = new CThrow();
 	primaryWeapon->Init();
-	// Set the laser blaster as the secondary weapon
-	//secondaryWeapon = new CLaserBlaster();
-	//secondaryWeapon->Init();
-	secondaryWeapon = new CGrenadeThrow();
-	secondaryWeapon->Init();
 }
 
 // Returns true if the player is on ground
 bool CPlayerInfo::isOnGround(void)
 {
-	if (m_bJumpUpwards == false && m_bFallDownwards == false)
+	if (m_bJumpUpwards == false && m_bFallDownwards == false && m_bFlying == false)
 		return true;
 
 	return false;
@@ -83,7 +80,7 @@ bool CPlayerInfo::isOnGround(void)
 // Returns true if the player is jumping upwards
 bool CPlayerInfo::isJumpUpwards(void)
 {
-	if (m_bJumpUpwards == true && m_bFallDownwards == false)
+	if (m_bJumpUpwards == true && m_bFallDownwards == false && m_bFlying == false)
 		return true;
 
 	return false;
@@ -92,7 +89,15 @@ bool CPlayerInfo::isJumpUpwards(void)
 // Returns true if the player is on freefall
 bool CPlayerInfo::isFreeFall(void)
 {
-	if (m_bJumpUpwards == false && m_bFallDownwards == true)
+	if (m_bJumpUpwards == false && m_bFallDownwards == true && m_bFlying == false)
+		return true;
+
+	return false;
+}
+
+bool CPlayerInfo::isFlying()
+{
+	if (m_bJumpUpwards == false && m_bFallDownwards == false && m_bFlying == true)
 		return true;
 
 	return false;
@@ -105,6 +110,7 @@ void CPlayerInfo::SetOnFreeFall(bool isOnFreeFall)
 	{
 		m_bJumpUpwards = false;
 		m_bFallDownwards = true;
+		m_bFlying = false;
 		m_dFallSpeed = 0.0;
 	}
 }
@@ -116,7 +122,18 @@ void CPlayerInfo::SetToJumpUpwards(bool isOnJumpUpwards)
 	{
 		m_bJumpUpwards = true;
 		m_bFallDownwards = false;
-		m_dJumpSpeed = 75.0;
+		m_bFlying = false;
+		m_dJumpSpeed = 25;
+	}
+}
+
+void CPlayerInfo::SetToFlying(bool isFlying)
+{
+	if (isFlying == true)
+	{
+		m_bJumpUpwards = false;
+		m_bFallDownwards = false;
+		m_bFlying = true;
 	}
 }
 
@@ -267,6 +284,20 @@ void CPlayerInfo::UpdateFreeFall(double dt)
 	}
 }
 
+void CPlayerInfo::UpdateFlying(double dt)
+{
+	if (m_bFlying == false)
+		return;
+
+	if (position.y < m_pTerrain->GetTerrainHeight(position))
+	{
+		Vector3 viewDirection = target - position;
+		position.y = m_pTerrain->GetTerrainHeight(position);
+		target = position + viewDirection;
+		m_bFlying = false;
+	}
+}
+
 /********************************************************************************
  Hero Update
  ********************************************************************************/
@@ -402,10 +433,62 @@ void CPlayerInfo::Update(double dt)
 	}
 
 	// If the user presses SPACEBAR, then make him jump
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) &&
-		position.y == m_pTerrain->GetTerrainHeight(position))
+	static bool dropping = false;
+	static bool flying = false;
+	static float fly = 0;
+	if (KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE))
 	{
-		SetToJumpUpwards(true);
+		if(isOnGround())
+		{
+			dropping = true;
+			SetToJumpUpwards(true);
+		}
+		else
+		{
+
+			if (flying)
+				flying = false;
+
+			else if (!flying)
+				SetOnFreeFall(true);
+
+			else if (dropping)
+			{
+				flying = true;
+				SetToFlying(true);
+			}
+
+			else if (!dropping)
+				dropping = true;
+		}
+	}
+
+	static float vertMove = 1000;
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE))
+	{
+		if (flying)
+		{
+			position.y += (float)(m_dFallSpeed * dt + 0.5 * vertMove * dt * dt);
+			target.y += (float)(m_dFallSpeed * dt + 0.5 * vertMove * dt * dt);
+		}
+	}
+
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_LSHIFT))
+	{
+		if (flying)
+		{
+			position.y -= (float)(m_dFallSpeed * dt + 0.5 * vertMove * dt * dt);
+			target.y -= (float)(m_dFallSpeed * dt + 0.5 * vertMove * dt * dt);
+		}
+	}
+
+	if (dropping)
+		fly += dt;
+
+	if (fly > 0.25)
+	{
+		dropping = false;
+		fly = 0;
 	}
 
 	// Update the weapons
@@ -428,10 +511,21 @@ void CPlayerInfo::Update(double dt)
 		secondaryWeapon->Update(dt);
 
 	// if Mouse Buttons were activated, then act on them
+	static int multiplier;
+	static int dir = 1;
 	if (MouseController::GetInstance()->IsButtonPressed(MouseController::LMB))
 	{
+		multiplier += dir;
+
+		if (multiplier <= 0 || multiplier >= 10)
+			dir *= -1;
+
+		multiplier = Math::Clamp(multiplier, 0, 10);
+	}
+	else if (MouseController::GetInstance()->IsButtonReleased(MouseController::LMB))
+	{
 		if (primaryWeapon)
-			primaryWeapon->Discharge(position, target, this);
+			primaryWeapon->Discharge(position, target, this, multiplier);
 	}
 	else if (MouseController::GetInstance()->IsButtonPressed(MouseController::RMB))
 	{
@@ -448,6 +542,7 @@ void CPlayerInfo::Update(double dt)
 	{
 		UpdateJumpUpwards(dt);
 		UpdateFreeFall(dt);
+		UpdateFlying(dt);
 	}
 
 	// If a camera is attached to this playerInfo class, then update it
@@ -477,7 +572,7 @@ void CPlayerInfo::Constrain(void)
 		position.z = minBoundary.z + 1.0f;
 
 	// if the player is not jumping nor falling, then adjust his y position
-	if ((m_bJumpUpwards == false) && (m_bFallDownwards == false))
+	if ((m_bJumpUpwards == false) && (m_bFallDownwards == false) && m_bFlying == false)
 	{
 		// if the y position is not equal to terrain height at that position, 
 		// then update y position to the terrain height
