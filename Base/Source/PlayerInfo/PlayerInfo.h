@@ -80,6 +80,8 @@ public:
 	// Get Fall Acceleration of the player
 	double GetFallAcceleration(void) const;
 
+	GroundEntity *GetTerrain(void);
+
 	// Update Jump Upwards
 	void UpdateJumpUpwards(double dt = 0.0333f);
 	// Update FreeFall

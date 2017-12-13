@@ -1,6 +1,8 @@
 #include "EntityManager.h"
 #include "EntityBase.h"
 #include "Collider/Collider.h"
+#include "Projectile\Laser.h"
+#include "SceneGraph\SceneGraph.h"
 
 #include <iostream>
 using namespace std;
@@ -15,6 +17,9 @@ void EntityManager::Update(double _dt)
 	{
 		(*it)->Update(_dt);
 	}
+
+	// render the scenegraph
+	CSceneGraph::GetInstance()->Update();
 
 	CheckForCollision();
 
@@ -46,6 +51,8 @@ void EntityManager::Render()
 	{
 		(*it)->Render();
 	}
+
+	CSceneGraph::GetInstance()->Render();
 }
 
 // Render the UI entities
@@ -61,9 +68,11 @@ void EntityManager::RenderUI()
 }
 
 // Add an entity to this EntityManager
-void EntityManager::AddEntity(EntityBase* _newEntity)
+void EntityManager::AddEntity(EntityBase* _newEntity, bool bAddToSpatialPartition)
 {
 	entityList.push_back(_newEntity);
+
+	if (theSPa)
 }
 
 // Remove an entity from this EntityManager
@@ -188,6 +197,45 @@ bool EntityManager::CheckForCollision(void)
 			int counter = 0;
 			for (colliderThat = colliderThis; colliderThat != colliderThatEnd; ++colliderThat)
 			{
+				if ((*colliderThis)->GetIsLaser())
+				{
+					// Dynamic casting to laser class
+					CLaser* thisEntity = dynamic_cast<CLaser*>(*colliderThis);
+
+					//checking
+					colliderThatEnd = entityList.end();
+					int counter = 0;
+					for (colliderThat = entityList.begin(); colliderThat != colliderThatEnd; ++colliderThat)
+					{
+						if (colliderThat == colliderThis)
+							continue;
+
+						if ((*colliderThat)->HasCollider())
+						{
+							Vector3 hitPosition = Vector3(0, 0, 0);
+
+							// Get the minAABB and maxAABB for (*colliderThat)
+							CCollider *thatCollider = dynamic_cast<CCollider*>(*colliderThat);
+							Vector3 thatMinAABB = (*colliderThat)->GetPosition() + thatCollider->GetMinAABB();
+							Vector3 thatMaxAABB = (*colliderThat)->GetPosition() + thatCollider->GetMaxAABB();
+
+							if (CheckLineSegmentPlane(thisEntity->GetPosition(),
+								thisEntity->GetPosition() - thisEntity->GetDirection() * thisEntity->GetLength(),
+								thatMinAABB, thatMaxAABB,
+								hitPosition) == true)
+							{
+								(*colliderThis)->SetIsDone(true);
+								(*colliderThat)->SetIsDone(true);
+
+								if (CSceneGraph::GetInstance()->DeleteNode(*colliderThis) == true)
+									cout << "Entity removed" << endl;
+
+								if (CSceneGraph::GetInstance()->DeleteNode(*colliderThat) == true)
+									cout << "Entity removed" << endl;
+							}
+						}
+					}
+				}
 				if (colliderThat == colliderThis)
 					continue;
 
@@ -201,11 +249,60 @@ bool EntityManager::CheckForCollision(void)
 						{
 							thisEntity->SetIsDone(true);
 							thatEntity->SetIsDone(true);
+
+
+							if (CSceneGraph::GetInstance()->DeleteNode(*colliderThis) == true)
+								cout << "Entity removed" << endl;
+
+							if (CSceneGraph::GetInstance()->DeleteNode(*colliderThat) == true)
+								cout << "Entity removed" << endl;
 						}
 					}
 				}
 			}
 		}
 	}
+	return false;
+}
+
+// Check where a line segment between two positions intersects a plane
+bool EntityManager::GetIntersection(const float fDst1, const float fDst2, Vector3 P1, Vector3 P2, Vector3 &Hit)
+{
+	if ((fDst1 * fDst2) >= 0.0f)
+		return false;
+	if (fDst1 == fDst2)
+		return false;
+	Hit = P1 + (P2 - P1) * (-fDst1 / (fDst2 - fDst1));
+	return true;
+}
+
+// Check two positions are within a box region
+bool EntityManager::InBox(Vector3 Hit, Vector3 B1, Vector3 B2, const int Axis)
+{
+	if (Axis == 1 && Hit.z > B1.z && Hit.z < B2.z && Hit.y > B1.y && Hit.y < B2.y) return true;
+	if (Axis == 2 && Hit.z > B1.z && Hit.z < B2.z && Hit.x > B1.x && Hit.x < B2.x) return true;
+	if (Axis == 3 && Hit.x > B1.x && Hit.x < B2.x && Hit.y > B1.y && Hit.y < B2.y) return true;
+	return false;
+}
+
+// Check for intersection between a line segment and a plane
+bool EntityManager::CheckLineSegmentPlane(Vector3 line_start, Vector3 line_end,
+	Vector3 minAABB, Vector3 maxAABB,
+	Vector3 &Hit)
+{
+	if ((GetIntersection(line_start.x - minAABB.x, line_end.x - minAABB.x, line_start, line_end, Hit) &&
+		InBox(Hit, minAABB, maxAABB, 1))
+		|| (GetIntersection(line_start.y - minAABB.y, line_end.y - minAABB.y, line_start, line_end, Hit) &&
+			InBox(Hit, minAABB, maxAABB, 2))
+		|| (GetIntersection(line_start.z - minAABB.z, line_end.z - minAABB.z, line_start, line_end, Hit) &&
+			InBox(Hit, minAABB, maxAABB, 3))
+		|| (GetIntersection(line_start.x - maxAABB.x, line_end.x - maxAABB.x, line_start, line_end, Hit) &&
+			InBox(Hit, minAABB, maxAABB, 1))
+		|| (GetIntersection(line_start.y - maxAABB.y, line_end.y - maxAABB.y, line_start, line_end, Hit) &&
+			InBox(Hit, minAABB, maxAABB, 2))
+		|| (GetIntersection(line_start.z - maxAABB.z, line_end.z - maxAABB.z, line_start, line_end, Hit) &&
+			InBox(Hit, minAABB, maxAABB, 3)))
+		return true;
+
 	return false;
 }
