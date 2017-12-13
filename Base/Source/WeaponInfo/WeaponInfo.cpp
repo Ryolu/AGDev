@@ -158,6 +158,10 @@ void CWeaponInfo::Discharge(Vector3 position, Vector3 target, CPlayerInfo* _sour
 			magRounds--;
 		}
 	}
+	else
+	{
+		int a = 0;
+	}
 }
 
 // Reload this weapon

@@ -79,8 +79,8 @@ public:
 	double GetFallSpeed(void) const;
 	// Get Fall Acceleration of the player
 	double GetFallAcceleration(void) const;
-
-	GroundEntity *GetTerrain(void);
+	// Get the terrain for the player info
+	GroundEntity* GetTerrain(void);
 
 	// Update Jump Upwards
 	void UpdateJumpUpwards(double dt = 0.0333f);
@@ -94,7 +94,7 @@ public:
 
 	// Handling Camera
 	void AttachCamera(FPSCamera* _cameraPtr);
-	void DetachCamera();
+	void DetachCamera(void);
 
 private:
 	Vector3 defaultPosition, defaultTarget, defaultUp;

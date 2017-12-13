@@ -89,6 +89,12 @@ int CSceneGraph::GenerateID(void)
 	return ID++;
 }
 
+// Update the Scene Graph
+void CSceneGraph::Update(void)
+{
+	theRoot->Update();
+}
+// Render the Scene Graph
 void CSceneGraph::Render(void)
 {
 	theRoot->Render();

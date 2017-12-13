@@ -26,10 +26,16 @@
       <UniqueIdentifier>{7dbec654-2f78-40a8-a3ff-38691d57358e}</UniqueIdentifier>
     </Filter>
     <Filter Include="SceneGraph">
-      <UniqueIdentifier>{0e4413ed-13bd-4ba9-8e71-de03501915df}</UniqueIdentifier>
+      <UniqueIdentifier>{8ac2bec7-1ed0-4c0b-9aa8-0cc9515237eb}</UniqueIdentifier>
     </Filter>
     <Filter Include="SpatialPartition">
-      <UniqueIdentifier>{5b00ca28-a5f6-4754-ab61-9be6d5dedef9}</UniqueIdentifier>
+      <UniqueIdentifier>{802e439a-6b63-421f-9bce-337a839a36c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LevelOfDetails">
+      <UniqueIdentifier>{3f38a962-a883-4f37-9a91-6979b4fc1f88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemy">
+      <UniqueIdentifier>{f5fb02ce-b59a-403f-b90f-1e6eba658755}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -75,25 +81,25 @@
     <ClCompile Include="Source\WeaponInfo\WeaponInfo.cpp">
       <Filter>WeaponInfo</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EntityManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GenericEntity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\WeaponInfo\LaserBlaster.cpp">
       <Filter>WeaponInfo</Filter>
     </ClCompile>
     <ClCompile Include="Source\Projectile\Laser.cpp">
       <Filter>Projectile</Filter>
     </ClCompile>
+    <ClCompile Include="Source\EntityManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GenericEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Source\SceneGraph\SceneGraph.cpp">
       <Filter>SceneGraph</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneGraph\SceneNode.cpp">
+    <ClCompile Include="Source\SceneGraph\Transform.cpp">
       <Filter>SceneGraph</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneGraph\Transform.cpp">
+    <ClCompile Include="Source\SceneGraph\SceneNode.cpp">
       <Filter>SceneGraph</Filter>
     </ClCompile>
     <ClCompile Include="Source\SceneGraph\UpdateTransformation.cpp">
@@ -110,6 +116,15 @@
     </ClCompile>
     <ClCompile Include="Source\Projectile\Grenade.cpp">
       <Filter>Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LevelOfDetails\LevelOfDetails.cpp">
+      <Filter>LevelOfDetails</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Enemy\Enemy.cpp">
+      <Filter>Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\WeaponInfo\Throw.cpp">
+      <Filter>WeaponInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -152,25 +167,25 @@
     <ClInclude Include="Source\WeaponInfo\WeaponInfo.h">
       <Filter>WeaponInfo</Filter>
     </ClInclude>
-    <ClInclude Include="Source\EntityManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GenericEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\WeaponInfo\LaserBlaster.h">
       <Filter>WeaponInfo</Filter>
     </ClInclude>
     <ClInclude Include="Source\Projectile\Laser.h">
       <Filter>Projectile</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SceneGraph\SceneNode.h">
-      <Filter>SceneGraph</Filter>
+    <ClInclude Include="Source\EntityManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GenericEntity.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneGraph\SceneGraph.h">
       <Filter>SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneGraph\Transform.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneGraph\SceneNode.h">
       <Filter>SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneGraph\UpdateTransformation.h">
@@ -187,6 +202,15 @@
     </ClInclude>
     <ClInclude Include="Source\Projectile\Grenade.h">
       <Filter>Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LevelOfDetails\LevelOfDetails.h">
+      <Filter>LevelOfDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Enemy\Enemy.h">
+      <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\WeaponInfo\Throw.h">
+      <Filter>WeaponInfo</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -50,10 +50,13 @@ public:
 	// Return the number of children in this group
 	int GetNumOfChild(void);
 
+	// Update the Scene Graph
+	void Update(void);
+	// Render the Scene Graph
+	void Render(void);
+
 	// PrintSelf for debug purposes
 	void PrintSelf(const int numTabs = 0);
-
-	void Render(void);
 
 protected:
 	int			ID;

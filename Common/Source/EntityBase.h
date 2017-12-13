@@ -26,8 +26,9 @@ public:
 	virtual bool HasCollider(void) const;
 	// Set the flag to indicate if this entity has a collider class parent
 	virtual void SetCollider(const bool _value);
-
+	// Set the flag, bLaser
 	virtual void SetIsLaser(const bool bLaser);
+	// Get the flag, bLaser
 	virtual bool GetIsLaser(void) const;
 
 protected:

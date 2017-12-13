@@ -525,6 +525,18 @@ Mesh* MeshBuilder::GenerateText(const std::string &meshName, unsigned numRow, un
 	return mesh;
 }
 
+/******************************************************************************/
+/*!
+\brief
+Generate the vertices of a ray;
+Then generate the VBO/IBO and store them in Mesh object
+
+\param meshName - name of mesh
+\param length - x-axis should start at -lengthX / 2 and end at lengthX / 2
+
+\return Pointer to mesh storing VBO/IBO of the ray
+*/
+/******************************************************************************/
 Mesh* MeshBuilder::GenerateRay(const std::string &meshName, const float length)
 {
 	Vertex v;
@@ -543,11 +555,11 @@ Mesh* MeshBuilder::GenerateRay(const std::string &meshName, const float length)
 	Mesh *mesh = new Mesh(meshName);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, vertex_buffer_data.size() * sizeof(Vertex),
-		&vertex_buffer_data[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertex_buffer_data.size() * sizeof(Vertex), 
+					&vertex_buffer_data[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->indexBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_data.size() * sizeof(GLuint),
-		&index_buffer_data[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_data.size() * sizeof(GLuint), 
+					&index_buffer_data[0], GL_STATIC_DRAW);
 
 	mesh->indexSize = index_buffer_data.size();
 	mesh->mode = Mesh::DRAW_LINES;

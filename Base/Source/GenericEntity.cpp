@@ -24,7 +24,13 @@ void GenericEntity::Render()
 	modelStack.PushMatrix();
 	modelStack.Translate(position.x, position.y, position.z);
 	modelStack.Scale(scale.x, scale.y, scale.z);
-	RenderHelper::RenderMesh(modelMesh);
+	if (GetLODStatus()==true)
+	{
+		if (theDetailLevel != NO_DETAILS)
+			RenderHelper::RenderMesh(GetLODMesh());
+	}
+	else
+		RenderHelper::RenderMesh(modelMesh);
 	modelStack.PopMatrix();
 }
 
@@ -47,13 +53,13 @@ GenericEntity* Create::Entity(	const std::string& _meshName,
 	result->SetPosition(_position);
 	result->SetScale(_scale);
 	result->SetCollider(false);
-	EntityManager::GetInstance()->AddEntity(result);
+	EntityManager::GetInstance()->AddEntity(result, true);
 	return result;
 }
 
-GenericEntity* Create::Asset(const std::string& _meshName, 
-							 const Vector3& _position,
-							 const Vector3& _scale)
+GenericEntity* Create::Asset(	const std::string& _meshName,
+								const Vector3& _position,
+								const Vector3& _scale)
 {
 	Mesh* modelMesh = MeshBuilder::GetInstance()->GetMesh(_meshName);
 	if (modelMesh == nullptr)
@@ -65,3 +71,4 @@ GenericEntity* Create::Asset(const std::string& _meshName,
 	result->SetCollider(false);
 	return result;
 }
+

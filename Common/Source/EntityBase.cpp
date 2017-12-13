@@ -47,11 +47,13 @@ void EntityBase::SetCollider(const bool _value)
 	m_bCollider = _value;
 }
 
+// Set the flag, bLaser
 void EntityBase::SetIsLaser(const bool bLaser)
 {
 	this->bLaser = bLaser;
 }
 
+// Get the flag, bLaser
 bool EntityBase::GetIsLaser(void) const
 {
 	return bLaser;

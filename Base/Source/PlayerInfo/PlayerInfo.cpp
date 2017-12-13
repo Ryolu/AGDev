@@ -7,6 +7,7 @@
 #include "../Projectile/Projectile.h"
 #include "../WeaponInfo/Pistol.h"
 #include "../WeaponInfo/LaserBlaster.h"
+#include "../WeaponInfo/GrenadeThrow.h"
 
 // Allocating and initializing CPlayerInfo's static data member.  
 // The pointer is allocated but not the object's constructor.
@@ -16,7 +17,7 @@ CPlayerInfo::CPlayerInfo(void)
 	: m_dSpeed(40.0)
 	, m_dAcceleration(10.0)
 	, m_bJumpUpwards(false)
-	, m_dJumpSpeed(10.0)
+	, m_dJumpSpeed(75.0)
 	, m_dJumpAcceleration(-10.0)
 	, m_bFallDownwards(false)
 	, m_dFallSpeed(0.0)
@@ -63,9 +64,11 @@ void CPlayerInfo::Init(void)
 	// Set the pistol as the primary weapon
 	primaryWeapon = new CPistol();
 	primaryWeapon->Init();
-	// Set the seondary weapon to laser blaster
-	secondaryWeapon = new CLaserBlaster();
-	secondaryWeapon->Init();	
+	// Set the laser blaster as the secondary weapon
+	//secondaryWeapon = new CLaserBlaster();
+	//secondaryWeapon->Init();
+	secondaryWeapon = new CGrenadeThrow();
+	secondaryWeapon->Init();
 }
 
 // Returns true if the player is on ground
@@ -113,7 +116,7 @@ void CPlayerInfo::SetToJumpUpwards(bool isOnJumpUpwards)
 	{
 		m_bJumpUpwards = true;
 		m_bFallDownwards = false;
-		m_dJumpSpeed = 40.0;
+		m_dJumpSpeed = 75.0;
 	}
 }
 
@@ -207,7 +210,8 @@ double CPlayerInfo::GetJumpAcceleration(void) const
 	return m_dJumpAcceleration;
 }
 
-GroundEntity * CPlayerInfo::GetTerrain(void)
+// Get the terrain for the player info
+GroundEntity* CPlayerInfo::GetTerrain(void)
 {
 	return m_pTerrain;
 }
@@ -271,8 +275,8 @@ void CPlayerInfo::Update(double dt)
 	double mouse_diff_x, mouse_diff_y;
 	MouseController::GetInstance()->GetMouseDelta(mouse_diff_x, mouse_diff_y);
 
-	double camera_yaw = mouse_diff_x / Math::PI; // 3.142 / 180.0
-	double camera_pitch = mouse_diff_y / Math::PI;	// 3.142 / 180.0
+	double camera_yaw = mouse_diff_x * Math::HALF_PI / 7;		// 3.142 / 180.0
+	double camera_pitch = mouse_diff_y * Math::HALF_PI / 7;	// 3.142 / 180.0
 
 	// Update the position if the WASD buttons were activated
 	if (KeyboardController::GetInstance()->IsKeyDown('W') ||
@@ -280,19 +284,15 @@ void CPlayerInfo::Update(double dt)
 		KeyboardController::GetInstance()->IsKeyDown('S') ||
 		KeyboardController::GetInstance()->IsKeyDown('D'))
 	{
-		Vector3 viewVector = target - position;	
+		Vector3 viewVector = target - position;
 		Vector3 rightUV;
 		if (KeyboardController::GetInstance()->IsKeyDown('W'))
 		{
-			Vector3 temp(viewVector);
-			temp.y = 0;
-			position += temp.Normalized() * (float)m_dSpeed * (float)dt;
+			position += viewVector.Normalized() * (float)m_dSpeed * (float)dt;
 		}
 		else if (KeyboardController::GetInstance()->IsKeyDown('S'))
 		{
-			Vector3 temp(viewVector);
-			temp.y = 0;
-			position -= temp.Normalized() * (float)m_dSpeed * (float)dt;
+			position -= viewVector.Normalized() * (float)m_dSpeed * (float)dt;
 		}
 		if (KeyboardController::GetInstance()->IsKeyDown('A'))
 		{
@@ -419,7 +419,7 @@ void CPlayerInfo::Update(double dt)
 		if (secondaryWeapon)
 		{
 			secondaryWeapon->Reload();
-			//primaryWeapon->PrintSelf();
+			//secondaryWeapon->PrintSelf();
 		}
 	}
 	if (primaryWeapon)

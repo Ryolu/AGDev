@@ -21,6 +21,7 @@
 #include "Light.h"
 #include "SkyBox/SkyBoxEntity.h"
 #include "SceneGraph\SceneGraph.h"
+#include "SpatialPartition\SpatialPartition.h"
 
 #include <iostream>
 using namespace std;
@@ -38,6 +39,7 @@ SceneText::SceneText(SceneManager* _sceneMgr)
 
 SceneText::~SceneText()
 {
+	CSpatialPartition::GetInstance()->RemoveCamera();
 	CSceneGraph::GetInstance()->Destroy();
 }
 
@@ -133,7 +135,7 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GetMesh("Chair")->textureID = LoadTGA("Image//chair.tga");
 	MeshBuilder::GetInstance()->GenerateRing("ring", Color(1, 0, 1), 36, 1, 0.5f);
 	MeshBuilder::GetInstance()->GenerateSphere("lightball", Color(1, 1, 1), 18, 36, 1.f);
-	MeshBuilder::GetInstance()->GenerateSphere("sphere", Color(1, 0, 0), 18, 36, 10.f);
+	MeshBuilder::GetInstance()->GenerateSphere("sphere", Color(1, 0, 0), 18, 36, 0.5f);
 	MeshBuilder::GetInstance()->GenerateCone("cone", Color(0.5f, 1, 0.3f), 36, 10.f, 10.f);
 	MeshBuilder::GetInstance()->GenerateCube("cube", Color(1.0f, 1.0f, 0.0f), 1.0f);
 	MeshBuilder::GetInstance()->GetMesh("cone")->material.kDiffuse.Set(0.99f, 0.99f, 0.99f);
@@ -142,6 +144,7 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GetMesh("GRASS_DARKGREEN")->textureID = LoadTGA("Image//grass_darkgreen.tga");
 	MeshBuilder::GetInstance()->GenerateQuad("GEO_GRASS_LIGHTGREEN", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GetMesh("GEO_GRASS_LIGHTGREEN")->textureID = LoadTGA("Image//grass_lightgreen.tga");
+	MeshBuilder::GetInstance()->GenerateCube("cubeSG", Color(1.0f, 0.64f, 0.0f), 1.0f);
 
 	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_FRONT", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_BACK", Color(1, 1, 1), 1.f);
@@ -155,30 +158,61 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GetMesh("SKYBOX_RIGHT")->textureID = LoadTGA("Image//SkyBox//skybox_right.tga");
 	MeshBuilder::GetInstance()->GetMesh("SKYBOX_TOP")->textureID = LoadTGA("Image//SkyBox//skybox_top.tga");
 	MeshBuilder::GetInstance()->GetMesh("SKYBOX_BOTTOM")->textureID = LoadTGA("Image//SkyBox//skybox_bottom.tga");
+	MeshBuilder::GetInstance()->GenerateRay("laser", 10.0f);
+	MeshBuilder::GetInstance()->GenerateQuad("GRIDMESH", Color(1, 1, 1), 10.f);
 
-	MeshBuilder::GetInstance()->GenerateRay("laser", 10.f);
-
+	// Set up the Spatial Partition and pass it to the EntityManager to manage
+	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
+	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
+	CSpatialPartition::GetInstance()->SetCamera(&camera);
+	CSpatialPartition::GetInstance()->SetLevelOfDetails(40000.0f, 160000.0f);
+	EntityManager::GetInstance()->SetSpatialPartition(CSpatialPartition::GetInstance());
 
 	// Create entities into the scene
 	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
-
-	//Parent
 	Create::Entity("lightball", Vector3(lights[0]->position.x, lights[0]->position.y, lights[0]->position.z)); // Lightball
+
 	GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f, -20.0f));
 	aCube->SetCollider(true);
-	aCube->SetAABB(Vector3(.5f, .5f, .5f), Vector3(-.5f, -.5f, -.5f));
+	aCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	aCube->InitLOD("cube", "sphere", "cubeSG");
+
+	// Add the pointer to this new entity to the Scene Graph
 	CSceneNode* theNode = CSceneGraph::GetInstance()->AddNode(aCube);
 	if (theNode == NULL)
-		cout << "EntityManager::AddEntity: Unable to add to scene graph" << endl;
+	{
+		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
+	}
 
-	//Child
 	GenericEntity* anotherCube = Create::Entity("cube", Vector3(-20.0f, 1.1f, -20.0f));
 	anotherCube->SetCollider(true);
-	anotherCube->SetAABB(Vector3(.5f, .5f, .5f), Vector3(-.5f, -.5f, -.5f));
+	anotherCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 	CSceneNode* anotherNode = theNode->AddChild(anotherCube);
 	if (anotherNode == NULL)
-		cout << "EntityManager::AddEntity: Unable to add to scene graph" << endl;
+	{
+		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
+	}
+	
+	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
+	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
 
+	CUpdateTransformation* baseMtx = new CUpdateTransformation();
+	baseMtx->ApplyUpdate(1.0f, 0.0f, 0.0f, 1.0f);
+	baseMtx->SetSteps(-60, 60);
+	baseNode->SetUpdateTransformation(baseMtx);
+
+	GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
+	CSceneNode* childNode = baseNode->AddChild(childCube);
+	childNode->ApplyTranslate(0.0f, 1.0f, 0.0f);
+
+	GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
+	CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
+	grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
+	CUpdateTransformation* aRotateMtx = new CUpdateTransformation();
+	aRotateMtx->ApplyUpdate(1.0f, 0.0f, 0.0f, 1.0f);
+	aRotateMtx->SetSteps(-120, 60);
+	grandchildNode->SetUpdateTransformation(aRotateMtx);
+	
 	groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
 //	Create::Text3DObject("text", Vector3(0.0f, 0.0f, 0.0f), "DM2210", Vector3(10.0f, 10.0f, 10.0f), Color(0, 1, 1));
 	Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
@@ -192,6 +226,20 @@ void SceneText::Init()
 	groundEntity->SetScale(Vector3(100.0f, 100.0f, 100.0f));
 	groundEntity->SetGrids(Vector3(10.0f, 1.0f, 10.0f));
 	playerInfo->SetTerrain(groundEntity);
+
+	// Create a CEnemy instance
+	srand(time(NULL));
+	for (int i = 0; i < 10; i++)
+	{
+		theEnemy = new CEnemy();
+		float x = 1.0f + (i * rand() % 1000 - 500.0f);
+		float y = 1.0f + (i * rand() % 1000 - 500.0f);
+		theEnemy->SetRandomSeed(rand());
+		theEnemy->Init(x, y);
+		theEnemy->SetTerrain(groundEntity);
+		theEnemy->SetTarget(theEnemy->GenerateTarget());
+		theEnemy = NULL;
+	}
 
 	// Setup the 2D entities
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
@@ -245,6 +293,17 @@ void SceneText::Update(double dt)
 		lights[0]->position.y -= (float)(10.f * dt);
 	if(KeyboardController::GetInstance()->IsKeyDown('P'))
 		lights[0]->position.y += (float)(10.f * dt);
+
+	if (KeyboardController::GetInstance()->IsKeyReleased('M'))
+	{
+		CSceneNode* theNode = CSceneGraph::GetInstance()->GetNode(1);
+		Vector3 pos = theNode->GetEntity()->GetPosition();
+		theNode->GetEntity()->SetPosition(Vector3(pos.x + 50.0f, pos.y, pos.z + 50.0f));
+	}
+	if (KeyboardController::GetInstance()->IsKeyReleased('N'))
+	{
+		CSpatialPartition::GetInstance()->PrintSelf();
+	}
 
 	// if the left mouse button was released
 	if (MouseController::GetInstance()->IsButtonReleased(MouseController::LMB))

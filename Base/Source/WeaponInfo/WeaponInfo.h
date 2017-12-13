@@ -61,7 +61,7 @@ public:
 	// Initialise this instance to default values
 	virtual void Init(void);
 	// Update the elapsed time
-	void Update(const double dt);
+	virtual void Update(const double dt);
 	// Discharge this weapon
 	virtual void Discharge(Vector3 position, Vector3 target, CPlayerInfo* _source = NULL);
 	// Reload this weapon
