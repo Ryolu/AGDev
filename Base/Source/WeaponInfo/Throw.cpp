@@ -31,7 +31,7 @@ void CThrow::Init(void)
 	bFire = true;
 }
 
-void CThrow::Discharge(Vector3 position, Vector3 target, CPlayerInfo * _source, float multiplier)
+void CThrow::Discharge(Vector3 position, Vector3 target, CPlayerInfo * _source, int multiplier)
 {
 	if (bFire)
 	{

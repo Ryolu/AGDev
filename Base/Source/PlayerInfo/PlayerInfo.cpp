@@ -321,11 +321,15 @@ void CPlayerInfo::Update(double dt)
 		Vector3 rightUV;
 		if (KeyboardController::GetInstance()->IsKeyDown('W'))
 		{
+			float thing = position.y;
 			position += viewVector.Normalized() * (float)m_dSpeed * (float)dt;
+			position.y = thing;
 		}
 		else if (KeyboardController::GetInstance()->IsKeyDown('S'))
 		{
+			float thing = position.y;
 			position -= viewVector.Normalized() * (float)m_dSpeed * (float)dt;
+			position.y = thing;
 		}
 		if (KeyboardController::GetInstance()->IsKeyDown('A'))
 		{
