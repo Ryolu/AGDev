@@ -443,23 +443,26 @@ void CPlayerInfo::Update(double dt)
 			dropping = true;
 			SetToJumpUpwards(true);
 		}
-		else
+ 		else
 		{
-
 			if (flying)
+			{
 				flying = false;
-
+			}
 			else if (!flying)
+			{
 				SetOnFreeFall(true);
+			}
 
-			else if (dropping)
+			if (dropping)
 			{
 				flying = true;
 				SetToFlying(true);
 			}
 
-			else if (!dropping)
+			if (!dropping)
 				dropping = true;
+
 		}
 	}
 
