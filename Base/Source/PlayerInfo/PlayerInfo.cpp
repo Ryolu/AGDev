@@ -65,7 +65,9 @@ void CPlayerInfo::Init(void)
 
 	// Set the pistol as the primary weapon
 	primaryWeapon = new CThrow();
-	primaryWeapon->Init();
+	primaryWeapon->Init(); 
+	secondaryWeapon = new CGrenadeThrow();
+	secondaryWeapon->Init();
 }
 
 // Returns true if the player is on ground
@@ -516,7 +518,7 @@ void CPlayerInfo::Update(double dt)
 	// if Mouse Buttons were activated, then act on them
 	static int multiplier;
 	static int dir = 1;
-	if (MouseController::GetInstance()->IsButtonPressed(MouseController::LMB))
+	if (MouseController::GetInstance()->IsButtonDown(MouseController::LMB))
 	{
 		multiplier += dir;
 
@@ -524,6 +526,7 @@ void CPlayerInfo::Update(double dt)
 			dir *= -1;
 
 		multiplier = Math::Clamp(multiplier, 0, 10);
+		std::cout << multiplier << std::endl;
 	}
 	else if (MouseController::GetInstance()->IsButtonReleased(MouseController::LMB))
 	{

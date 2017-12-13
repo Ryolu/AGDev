@@ -42,7 +42,7 @@ void CPresent::Update(double dt)
 		return;
 
 	// Update TimeLife of projectile. Set to inactive if too long
-	m_fLifetime -= (float)dt;
+	//m_fLifetime -= (float)dt;
 	if (m_fLifetime < 0.0f)
 	{
 		SetStatus(false);

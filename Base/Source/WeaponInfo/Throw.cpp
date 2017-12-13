@@ -52,4 +52,5 @@ void CThrow::Discharge(Vector3 position, Vector3 target, CPlayerInfo * _source, 
 			magRounds--;
 		}
 	}
+	std::cout << "Present thrown" << std::endl;
 }
