@@ -4,7 +4,7 @@
 #include "ShaderProgram.h"
 #include "MatrixStack.h"
 
-void RenderHelper::RenderMesh(Mesh* _mesh)
+void RenderHelper::RenderMesh(Mesh* _mesh, bool _selected)
 {
 	// Get all our transform matrices & update shader
 	Mtx44 MVP;
@@ -16,25 +16,41 @@ void RenderHelper::RenderMesh(Mesh* _mesh)
 	currProg->UpdateInt("lightEnabled", 0);
 
 	// Update textures first if available
-	if (_mesh->textureID > 0)
+	for (int i = 0; i < MAX_TEXTURES; ++i)
 	{
-		currProg->UpdateInt("colorTextureEnabled", 1);
-		GraphicsManager::GetInstance()->UpdateTexture(0, _mesh->textureID);
-		currProg->UpdateInt("colorTexture", 0);
+		if (i == 1 && !_selected)
+		{
+			currProg->UpdateInt("colorTextureEnabled[1]", 0);
+			continue;
+		}
+
+		std::string colorTextureEnabled = "colorTextureEnabled[";
+		colorTextureEnabled += std::to_string(i) + "]";
+
+		std::string colorTexture = "colorTexture[";
+		colorTexture += std::to_string(i) + "]";
+
+		if (_mesh->textArray[i] > 0)
+		{
+			currProg->UpdateInt(colorTextureEnabled, 1);
+			GraphicsManager::GetInstance()->UpdateTexture(i, _mesh->textArray[i]);
+			currProg->UpdateInt(colorTexture, i);
+		}
+		else
+		{
+			currProg->UpdateInt(colorTextureEnabled, 0);
+		}
 	}
-	else
-	{
-		currProg->UpdateInt("colorTextureEnabled", 0);
-	}
+
 
 	// Do actual rendering
 	_mesh->Render();
 
 	// Unbind texture for safety (in case next render call uses it by accident)
-	if (_mesh->textureID > 0)
-	{
-		GraphicsManager::GetInstance()->UnbindTexture(0);
-	}
+	//if (_mesh->textureID > 0)
+	//{
+	//	GraphicsManager::GetInstance()->UnbindTexture(0);
+	//}
 }
 
 void RenderHelper::RenderMeshWithLight(Mesh* _mesh)
@@ -83,7 +99,7 @@ void RenderHelper::RenderMeshWithLight(Mesh* _mesh)
 void RenderHelper::RenderText(Mesh* _mesh, const std::string& _text, Color _color)
 {
 	// Trivial Rejection : Unable to render without mesh or texture
-	if (!_mesh || _mesh->textureID <= 0)
+	if (!_mesh || _mesh->textArray[0] <= 0)
 		return;
 
 	ShaderProgram* currProg = GraphicsManager::GetInstance()->GetActiveShader();
@@ -91,11 +107,11 @@ void RenderHelper::RenderText(Mesh* _mesh, const std::string& _text, Color _colo
 	currProg->UpdateInt("textEnabled", 1);
 	currProg->UpdateVector3("textColor", &_color.r);
 	currProg->UpdateInt("lightEnabled", 0);
-	currProg->UpdateInt("colorTextureEnabled", 1);
+	currProg->UpdateInt("colorTextureEnabled[0]", 1);
 	
-	currProg->UpdateInt("colorTextureEnabled", 1);
-	GraphicsManager::GetInstance()->UpdateTexture(0, _mesh->textureID);
-	currProg->UpdateInt("colorTexture", 0);
+	currProg->UpdateInt("colorTextureEnabled[0]", 1);
+	GraphicsManager::GetInstance()->UpdateTexture(0, _mesh->textArray[0]);
+	currProg->UpdateInt("colorTexture[0]", 0);
 
 	for (unsigned i = 0; i < _text.length(); ++i)
 	{

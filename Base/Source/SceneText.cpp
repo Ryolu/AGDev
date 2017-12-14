@@ -45,7 +45,7 @@ SceneText::~SceneText()
 
 void SceneText::Init()
 {
-	currProg = GraphicsManager::GetInstance()->LoadShader("default", "Shader//Texture.vertexshader", "Shader//Texture.fragmentshader");
+	currProg = GraphicsManager::GetInstance()->LoadShader("default", "Shader//Texture.vertexshader", "Shader//MultiTexture.fragmentshader");
 
 	MeshBuilder::GetInstance()->Init();
 	
@@ -82,8 +82,10 @@ void SceneText::Init()
 		currProg->AddUniform("lights[1].cosCutoff");
 		currProg->AddUniform("lights[1].cosInner");
 		currProg->AddUniform("lights[1].exponent");
-		currProg->AddUniform("colorTextureEnabled");
-		currProg->AddUniform("colorTexture");
+		currProg->AddUniform("colorTextureEnabled[0]");
+		currProg->AddUniform("colorTextureEnabled[1]");
+		currProg->AddUniform("colorTexture[0]");
+		currProg->AddUniform("colorTexture[1]");
 		currProg->AddUniform("textEnabled");
 		currProg->AddUniform("textColor");
 	}

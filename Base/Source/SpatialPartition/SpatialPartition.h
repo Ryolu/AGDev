@@ -20,6 +20,9 @@ protected:
 	int zGridSize;
 	int xNumOfGrid;
 	int zNumOfGrid;
+	int playerGrid;
+	int playerGridx;
+	int playerGridz;
 	float yOffset;
 	std::string _meshName; // Name of the mesh
 
@@ -27,6 +30,8 @@ protected:
 	FPSCamera* theCamera;
 	// LOD distances
 	float LevelOfDetails_Distances[2];
+
+	int xPos, zPos;
 
 public:
 	static CSpatialPartition *GetInstance()
@@ -104,4 +109,6 @@ public:
 	void SetLevelOfDetails(const float distance_High2Mid, const float distance_Mid2Low);
 	// Check if a CGrid is visible to the camera
 	bool IsVisible(Vector3 theCameraPosition, Vector3 theCameraDirection, const int xIndex, const int zIndex);
+
+	void SetPlayerGrid(float _x, float _z);
 };

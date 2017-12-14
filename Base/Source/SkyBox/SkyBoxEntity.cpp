@@ -3,6 +3,7 @@
 #include "../EntityManager.h"
 #include "GraphicsManager.h"
 #include "RenderHelper.h"
+#include "../PlayerInfo/PlayerInfo.h"
 
 SkyBoxEntity::SkyBoxEntity(void)
 	: size(1000.0f, 1000.0f, 1000.0f)
@@ -26,6 +27,7 @@ void SkyBoxEntity::Render()
 
 		// Front
 		modelStack.PushMatrix();
+		modelStack.Translate(CPlayerInfo::GetInstance()->GetPos().x, 0, CPlayerInfo::GetInstance()->GetPos().z);
 		modelStack.Translate(0, 0, -size.z / 2);
 		modelStack.Scale(size.x, size.y, size.z);
 			RenderHelper::RenderMesh(modelMesh[FRONT]);
@@ -33,6 +35,7 @@ void SkyBoxEntity::Render()
 
 		// Back
 		modelStack.PushMatrix();
+		modelStack.Translate(CPlayerInfo::GetInstance()->GetPos().x, 0, CPlayerInfo::GetInstance()->GetPos().z);
 		modelStack.Rotate(180, 0, 1, 0);
 		modelStack.Translate(0, 0, -size.z / 2);
 		modelStack.Scale(size.x, size.y, size.z);
@@ -41,6 +44,7 @@ void SkyBoxEntity::Render()
 
 		// Left
 		modelStack.PushMatrix();
+		modelStack.Translate(CPlayerInfo::GetInstance()->GetPos().x, 0, CPlayerInfo::GetInstance()->GetPos().z);
 		modelStack.Rotate(-90, 0, 1, 0);
 		modelStack.Translate(0, 0, -size.z / 2);
 		modelStack.Scale(size.x, size.y, size.z);
@@ -49,6 +53,7 @@ void SkyBoxEntity::Render()
 
 		// Right
 		modelStack.PushMatrix();
+		modelStack.Translate(CPlayerInfo::GetInstance()->GetPos().x, 0, CPlayerInfo::GetInstance()->GetPos().z);
 		modelStack.Rotate(90, 0, 1, 0);
 		modelStack.Translate(0, 0, -size.z / 2);
 		modelStack.Scale(size.x, size.y, size.z);
@@ -57,6 +62,7 @@ void SkyBoxEntity::Render()
 
 		// Top
 		modelStack.PushMatrix();
+		modelStack.Translate(CPlayerInfo::GetInstance()->GetPos().x, 0, CPlayerInfo::GetInstance()->GetPos().z);
 		modelStack.Rotate(90, 1, 0, 0);
 		modelStack.Translate(0, 0, -size.z / 2);
 		modelStack.Rotate(-90, 0, 0, 1);
@@ -66,6 +72,7 @@ void SkyBoxEntity::Render()
 
 		// Bottom
 		modelStack.PushMatrix();
+		modelStack.Translate(CPlayerInfo::GetInstance()->GetPos().x, 0, CPlayerInfo::GetInstance()->GetPos().z);
 		modelStack.Rotate(-90, 1, 0, 0);
 		modelStack.Translate(0, 0, -size.z / 2);
 		modelStack.Rotate(90, 0, 0, 1);

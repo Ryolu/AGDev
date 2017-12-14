@@ -73,9 +73,9 @@ void CPresent::Update(double dt)
 			position.y + (float)(theDirection.y * m_fElapsedTime * m_fSpeed) + (0.5 * m_fGravity * m_fElapsedTime * m_fElapsedTime),
 			position.z + (float)(theDirection.z * m_fElapsedTime * m_fSpeed));
 
-		if (position.y < m_pTerrain->GetTerrainHeight(position) - 10.0f)
+		if (position.y < m_pTerrain->GetTerrainHeight(position) - 10.f + scale.x / 2)
 		{
-			position.y = m_pTerrain->GetTerrainHeight(position) - 10.0f;
+			position.y = m_pTerrain->GetTerrainHeight(position) - 10.f + scale.x / 2;
 			m_fSpeed = 0.0f;
 			return;
 		}

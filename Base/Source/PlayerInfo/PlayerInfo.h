@@ -3,8 +3,9 @@
 #include "../FPSCamera.h"
 #include "../GroundEntity.h"
 #include "../WeaponInfo/WeaponInfo.h"
+#include "SingletonTemplate.h"
 
-class CPlayerInfo
+class CPlayerInfo : public Singleton<CPlayerInfo>
 {
 protected:
 	static CPlayerInfo *s_instance;

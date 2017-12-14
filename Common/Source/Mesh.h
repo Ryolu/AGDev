@@ -1,6 +1,8 @@
 #ifndef MESH_H
 #define MESH_H
 
+#define MAX_TEXTURES 2
+
 #include <string>
 #include "Material.h"
 
@@ -27,6 +29,7 @@ public:
 
 	Material material;
 	unsigned textureID;
+	unsigned textArray[MAX_TEXTURES];
 };
 
 #endif
