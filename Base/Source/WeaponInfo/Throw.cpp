@@ -40,7 +40,7 @@ void CThrow::Discharge(Vector3 position, Vector3 target, CPlayerInfo * _source, 
 		{
 			// Create a projectile with a cube mesh. Its position and direction is same as the player.
 			// It will last for 3.0 seconds and travel at 500 units per second
-			CProjectile* aProjectile = Create::Present("cube",
+			CProjectile* aProjectile = Create::Present("Spiky0",
 				position,
 				(target - position).Normalized(),
 				7.0f,

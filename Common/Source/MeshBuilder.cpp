@@ -19,7 +19,7 @@ void MeshBuilder::Init()
 	MeshBuilder::GetInstance()->GetMesh("text")->textArray[0] = LoadTGA("Image//calibri.tga");
 	MeshBuilder::GetInstance()->GetMesh("text")->material.kAmbient.Set(1, 0, 0);
 	//MeshBuilder::GetInstance()->GenerateOBJ("Chair", "OBJ//chair.obj");
-	//MeshBuilder::GetInstance()->GetMesh("Chair")->textureID = LoadTGA("Image//chair.tga");
+	//MeshBuilder::GetInstance()->GetMesh("Chair")->textArray[0] = LoadTGA("Image//chair.tga");
 	MeshBuilder::GetInstance()->GenerateRing("ring", Color(1, 0, 1), 36, 1, 0.5f);
 	MeshBuilder::GetInstance()->GenerateSphere("lightball", Color(1, 1, 1), 18, 36, 1.f);
 	MeshBuilder::GetInstance()->GenerateSphere("sphere", Color(1, 0, 0), 18, 36, 0.5f);
@@ -27,10 +27,10 @@ void MeshBuilder::Init()
 	MeshBuilder::GetInstance()->GenerateCube("cube", Color(1.0f, 1.0f, 0.0f), 1.0f);
 	MeshBuilder::GetInstance()->GetMesh("cone")->material.kDiffuse.Set(0.99f, 0.99f, 0.99f);
 	MeshBuilder::GetInstance()->GetMesh("cone")->material.kSpecular.Set(0.f, 0.f, 0.f);
-	MeshBuilder::GetInstance()->GenerateQuad("GRASS_DARKGREEN", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("GRASS_DARKGREEN")->textArray[0] = LoadTGA("Image//grass_darkgreen.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("GEO_GRASS_LIGHTGREEN", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("GEO_GRASS_LIGHTGREEN")->textArray[0] = LoadTGA("Image//grass_lightgreen.tga");
+	//MeshBuilder::GetInstance()->GenerateQuad("GRASS_DARKGREEN", Color(1, 1, 1), 1.f);
+	//MeshBuilder::GetInstance()->GetMesh("GRASS_DARKGREEN")->textArray[0] = LoadTGA("Image//grass_darkgreen.tga");
+	//MeshBuilder::GetInstance()->GenerateQuad("GEO_GRASS_LIGHTGREEN", Color(1, 1, 1), 1.f);
+	//MeshBuilder::GetInstance()->GetMesh("GEO_GRASS_LIGHTGREEN")->textArray[0] = LoadTGA("Image//grass_lightgreen.tga");
 	MeshBuilder::GetInstance()->GenerateCube("cubeSG", Color(1.0f, 0.64f, 0.0f), 1.0f);
 
 	MeshBuilder::GetInstance()->GenerateQuad("REDSQUARE", Color(1, 0, 0), 1.f);
@@ -51,6 +51,51 @@ void MeshBuilder::Init()
 	MeshBuilder::GetInstance()->GetMesh("SKYBOX_BOTTOM")->textArray[0] = LoadTGA("Image//SkyBox//skybox_bottom.tga");
 	MeshBuilder::GetInstance()->GenerateRay("laser", 10.0f);
 	MeshBuilder::GetInstance()->GenerateQuad("GRIDMESH", Color(1, 1, 1), 10.f);
+
+	//Ground
+	MeshBuilder::GetInstance()->GenerateQuad("Snow", Color(1, 1, 1), 1.f);
+	MeshBuilder::GetInstance()->GetMesh("Snow")->textArray[0] = LoadTGA("Image//A1//SnowTexture.tga");
+	MeshBuilder::GetInstance()->GetMesh("Snow")->textArray[1] = LoadTGA("Image//A1//Snow.tga");
+
+	//Gifts
+	MeshBuilder::GetInstance()->GenerateOBJ("Spiky0", "OBJ//A1//LOD0//Gift_Spiky.obj");
+	MeshBuilder::GetInstance()->GenerateOBJ("Spiky1", "OBJ//A1//LOD1//Gift_Spiky.obj");
+	MeshBuilder::GetInstance()->GenerateOBJ("Spiky2", "OBJ//A1//LOD2//Gift_Spiky.obj");
+	MeshBuilder::GetInstance()->GetMesh("Spiky0")->textArray[0] = LoadTGA("Image//A1//Gift_Spiky.tga");
+	MeshBuilder::GetInstance()->GetMesh("Spiky1")->textArray[0] = LoadTGA("Image//A1//Gift_Spiky.tga");
+	MeshBuilder::GetInstance()->GetMesh("Spiky2")->textArray[0] = LoadTGA("Image//A1//Gift_Spiky.tga");
+	//MeshBuilder::GetInstance()->GenerateOBJ("Cylinder0", "OBJ//A1//LOD0//Gift_Cylinder0.obj");
+	//MeshBuilder::GetInstance()->GenerateOBJ("Cylinder1", "OBJ//A1//LOD1//Gift_Cylinder1.obj");
+	//MeshBuilder::GetInstance()->GenerateOBJ("Cylinder2", "OBJ//A1//LOD2//Gift_Cylinder2.obj");
+	//MeshBuilder::GetInstance()->GetMesh("Cylinder0")->textArray[0] = LoadTGA("Image//A1//Gift_Cylinder.tga");
+	//MeshBuilder::GetInstance()->GetMesh("Cylinder1")->textArray[0] = LoadTGA("Image//A1//Gift_Cylinder.tga");
+	//MeshBuilder::GetInstance()->GetMesh("Cylinder2")->textArray[0] = LoadTGA("Image//A1//Gift_Cylinder.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("Square", "OBJ//A1//Gift_Square.obj");
+	MeshBuilder::GetInstance()->GetMesh("Square")->textArray[0] = LoadTGA("Image//A1//Gift_Square.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("Rectangle", "OBJ//A1//Gift_Rectangle.obj");
+	MeshBuilder::GetInstance()->GetMesh("Rectangle")->textArray[0] = LoadTGA("Image//A1//Gift_Rectangle.tga");
+
+	//Houses
+	MeshBuilder::GetInstance()->GenerateOBJ("Beige", "OBJ//A1//House_Beige.obj");
+	MeshBuilder::GetInstance()->GetMesh("Beige")->textArray[0] = LoadTGA("Image//A1//House_Beige.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("Blue", "OBJ//A1//House_Blue.obj");
+	MeshBuilder::GetInstance()->GetMesh("Blue")->textArray[0] = LoadTGA("Image//A1//House_Blue.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("Burgundy", "OBJ//A1//House_Burgundy.obj");
+	MeshBuilder::GetInstance()->GetMesh("Burgundy")->textArray[0] = LoadTGA("Image//A1//House_Burgundy.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("Chimney_Beige", "OBJ//A1//Chimney.obj");
+	MeshBuilder::GetInstance()->GetMesh("Chimney_Beige")->textArray[0] = LoadTGA("Image//A1//Chimney_Beige.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("Chimney_Blue", "OBJ//A1//Chimney.obj");
+	MeshBuilder::GetInstance()->GetMesh("Chimney_Blue")->textArray[0] = LoadTGA("Image//A1//Chimney_Blue.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("Chimney_Burgundy", "OBJ//A1//Chimney.obj");
+	MeshBuilder::GetInstance()->GetMesh("Chimney_Burgundy")->textArray[0] = LoadTGA("Image//A1//Chimney_Burgundy.tga");
+
+	//Road
+	MeshBuilder::GetInstance()->GenerateOBJ("Road", "OBJ//A1//Road.obj");
+	MeshBuilder::GetInstance()->GetMesh("Road")->textArray[0] = LoadTGA("Image//A1//Road.tga");
+
+	//Pavement
+	MeshBuilder::GetInstance()->GenerateOBJ("Pavement", "OBJ//A1//Pavement.obj");
+	MeshBuilder::GetInstance()->GetMesh("Pavement")->textArray[0] = LoadTGA("Image//A1//Pavement.tga");
 }
 
 /******************************************************************************/

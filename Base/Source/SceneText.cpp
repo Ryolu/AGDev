@@ -13,6 +13,7 @@
 #include "GraphicsManager.h"
 #include "ShaderProgram.h"
 #include "EntityManager.h"
+#include "Particle.h"
 
 #include "GenericEntity.h"
 #include "GroundEntity.h"
@@ -182,14 +183,44 @@ void SceneText::Init()
 	//aRotateMtx->SetSteps(-120, 60);
 	//grandchildNode->SetUpdateTransformation(aRotateMtx);
 	
+	//Create Gift entities
+	{
+		//Spiky
+		GenericEntity* Spiky = Create::Entity("Spiky0", Vector3(-20.0f, 0.0f, -20.0f));
+		Spiky->SetCollider(true);
+		Spiky->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+		Spiky->InitLOD("Spiky0", "Spiky1", "Spiky2");
+		
+		// Add the pointer to this new entity to the Scene Graph
+		CSceneNode* theNode = CSceneGraph::GetInstance()->AddNode(Spiky);
+		if (theNode == NULL)
+		{
+			cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
+		}
+	}
 
+	//Create House entities
+	{
+		//Beige
+		GenericEntity* Beige = Create::Entity("Beige", Vector3(-20.0f, 15.0f, -20.0f), Vector3(50, 50, 50));
+		Beige->SetCollider(true);
+		Beige->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+		
+		// Add the pointer to this new entity to the Scene Graph
+		CSceneNode* theNode = CSceneGraph::GetInstance()->AddNode(Beige);
+		if (theNode == NULL)
+		{
+			cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
+		}
+	}
+	
 	SkyBoxEntity* theSkyBox = Create::SkyBox("SKYBOX_FRONT", "SKYBOX_BACK",
 											 "SKYBOX_LEFT", "SKYBOX_RIGHT",
 											 "SKYBOX_TOP", "SKYBOX_BOTTOM");
 
 	// Customise the ground entity
 	{
-		groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
+		groundEntity = Create::Ground("Snow", "Snow");
 		groundEntity->SetPosition(Vector3(0, -10, 0));
 		groundEntity->SetScale(Vector3(100.0f, 100.0f, 100.0f));
 		groundEntity->SetGrids(Vector3(10.0f, 1.0f, 10.0f));
@@ -223,6 +254,10 @@ void SceneText::Init()
 		}
 		textObj[0]->SetText("HELLO WORLD");
 	}
+
+	//Init Particle Stuff
+	//m_particleCount = 0;
+	//MAX_PARTICLE = 200;
 }
 
 void SceneText::Update(double dt)
