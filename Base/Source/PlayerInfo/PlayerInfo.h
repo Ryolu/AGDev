@@ -87,6 +87,8 @@ public:
 	// Get the terrain for the player info
 	GroundEntity* GetTerrain(void);
 
+	int GetMultiplier();
+
 	// Update Jump Upwards
 	void UpdateJumpUpwards(double dt = 0.0333f);
 	// Update FreeFall
@@ -126,4 +128,6 @@ private:
 
 	CWeaponInfo* primaryWeapon;
 	CWeaponInfo* secondaryWeapon;
+
+	float multiplier;
 };

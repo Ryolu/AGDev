@@ -15,6 +15,7 @@
 class ShaderProgram;
 class SceneManager;
 class TextEntity;
+class SpriteEntity;
 class Light;
 class SceneText : public Scene
 {	
@@ -35,6 +36,7 @@ private:
 	GroundEntity* groundEntity;
 	FPSCamera camera;
 	TextEntity* textObj[3];
+	SpriteEntity* invis;
 	Light* lights[2];
 
 	GenericEntity* theCube;

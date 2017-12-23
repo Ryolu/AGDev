@@ -68,6 +68,8 @@ void CPlayerInfo::Init(void)
 	primaryWeapon->Init(); 
 	secondaryWeapon = new CGrenadeThrow();
 	secondaryWeapon->Init();
+
+	multiplier = 0;
 }
 
 // Returns true if the player is on ground
@@ -233,6 +235,11 @@ double CPlayerInfo::GetJumpAcceleration(void) const
 GroundEntity* CPlayerInfo::GetTerrain(void)
 {
 	return m_pTerrain;
+}
+
+int CPlayerInfo::GetMultiplier()
+{
+	return multiplier;
 }
 
 // Update Jump Upwards
@@ -520,22 +527,22 @@ void CPlayerInfo::Update(double dt)
 		secondaryWeapon->Update(dt);
 
 	// if Mouse Buttons were activated, then act on them
-	static int multiplier;
-	static int dir = 1;
+	static int dir = 100;
 	if (MouseController::GetInstance()->IsButtonDown(MouseController::LMB))
 	{
-		multiplier += dir;
+		multiplier += dir * dt;
 
-		if (multiplier <= 0 || multiplier >= 10)
+		if (multiplier <= 0 || multiplier >= 100)
 			dir *= -1;
 
-		multiplier = Math::Clamp(multiplier, 0, 10);
-		std::cout << multiplier << std::endl;
+		multiplier = Math::Clamp(multiplier, 0.f, 100.f);
 	}
 	else if (MouseController::GetInstance()->IsButtonReleased(MouseController::LMB))
 	{
 		if (primaryWeapon)
-			primaryWeapon->Discharge(position, target, this, multiplier);
+			primaryWeapon->Discharge(position, target, this, multiplier / 10);
+
+		multiplier = 0;
 	}
 	else if (MouseController::GetInstance()->IsButtonPressed(MouseController::RMB))
 	{

@@ -202,7 +202,7 @@ void SceneText::Init()
 	//Create House entities
 	{
 		//Beige
-		GenericEntity* Beige = Create::Entity("Beige", Vector3(-20.0f, 15.0f, -20.0f), Vector3(50, 50, 50));
+		GenericEntity* Beige = Create::Entity("Beige", Vector3(-20.0f, -10.f, -20.0f), Vector3(50, 50, 50));
 		Beige->SetCollider(true);
 		Beige->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 		
@@ -227,23 +227,25 @@ void SceneText::Init()
 		playerInfo->SetTerrain(groundEntity);
 	}
 
-	// Create a CEnemy instance
-	srand(time(NULL));
-	for (int i = 0; i < 10; i++)
-	{
-		theEnemy = new CEnemy();
-		float x = 1.0f + (i * rand() % 1000 - 500.0f);
-		float y = 1.0f + (i * rand() % 1000 - 500.0f);
-		theEnemy->SetRandomSeed(rand());
-		theEnemy->Init(x, y);
-		theEnemy->SetTerrain(groundEntity);
-		theEnemy->SetTarget(theEnemy->GenerateTarget());
-		theEnemy = NULL;
-	}
+	/// Create a CEnemy instance
+	//srand(time(NULL));
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	theEnemy = new CEnemy();
+	//	float x = 1.0f + (i * rand() % 1000 - 500.0f);
+	//	float y = 1.0f + (i * rand() % 1000 - 500.0f);
+	//	theEnemy->SetRandomSeed(rand());
+	//	theEnemy->Init(x, y);
+	//	theEnemy->SetTerrain(groundEntity);
+	//	theEnemy->SetTarget(theEnemy->GenerateTarget());
+	//	theEnemy = NULL;
+	//}
 
 	// Setup the 2D entities
 	{
 		Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
+		invis = Create::Sprite2DObject("invis", Vector3(350.0f, -225.0f, 1.0f), Vector3(40.0f, 100.0f, 0.0f));
+		Create::Sprite2DObject("powerbar", Vector3(350.0f, -225.0f, 0.0f), Vector3(25.0f, 100.0f, 0.0f));
 		float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
 		float halfWindowHeight = Application::GetInstance().GetWindowHeight() / 2.0f;
 		float fontSize = 25.0f;
@@ -337,6 +339,8 @@ void SceneText::Update(double dt)
 
 	// Update the player position and other details based on keyboard and mouse inputs
 	playerInfo->Update(dt);
+
+	invis->SetPosition(Vector3(invis->GetPosition().x, -225.f + playerInfo->GetMultiplier() * (invis->GetScale().y / 100), invis->GetPosition().z));
 
 	//camera.Update(dt); // Can put the camera into an entity rather than here (Then we don't have to write this)
 

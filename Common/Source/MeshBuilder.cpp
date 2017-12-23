@@ -96,6 +96,11 @@ void MeshBuilder::Init()
 	//Pavement
 	MeshBuilder::GetInstance()->GenerateOBJ("Pavement", "OBJ//A1//Pavement.obj");
 	MeshBuilder::GetInstance()->GetMesh("Pavement")->textArray[0] = LoadTGA("Image//A1//Pavement.tga");
+
+	MeshBuilder::GetInstance()->GenerateQuad("powerbar", Color(1, 1, 1), 1.f);
+	MeshBuilder::GetInstance()->GetMesh("powerbar")->textArray[0] = LoadTGA("Image//A1//powerbar.tga");
+	MeshBuilder::GetInstance()->GenerateQuad("invis", Color(1, 1, 1), 1.f);
+	MeshBuilder::GetInstance()->GetMesh("invis")->textArray[0] = LoadTGA("Image//A1//invis.tga");
 }
 
 /******************************************************************************/
