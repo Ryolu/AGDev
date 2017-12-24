@@ -162,8 +162,6 @@ void CSpatialPartition::Update(void)
 
 		MigrationList.clear();
 	}
-
-	SetPlayerGrid(CPlayerInfo::GetInstance()->GetPos().x, CPlayerInfo::GetInstance()->GetPos().z);
 }
 
 /********************************************************************************
@@ -386,8 +384,18 @@ bool CSpatialPartition::IsVisible(	Vector3 theCameraPosition,
 	return true;
 }
 
-void CSpatialPartition::SetPlayerGrid(float _x, float _z)
+void CSpatialPartition::AddAffectedGrid(Vector3 _vector)
 {
-	playerGridx = _x / xGridSize;
-	playerGridz = (int)_z % zGridSize;
+	affectedGrid.insert(_vector);
+}
+
+void CSpatialPartition::RemoveAffectedGrid(Vector3 _vector)
+{
+	for (auto vector : affectedGrid)
+	{
+		if (vector == _vector)
+		{
+			affectedGrid.erase(_vector);
+		}
+	}
 }

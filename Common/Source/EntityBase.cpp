@@ -6,6 +6,7 @@ EntityBase::EntityBase()
 	, isDone(false)
 	, m_bCollider(false)
 	, bLaser(false)
+	, isSelected(false)
 {
 }
 
@@ -57,4 +58,14 @@ void EntityBase::SetIsLaser(const bool bLaser)
 bool EntityBase::GetIsLaser(void) const
 {
 	return bLaser;
+}
+
+void EntityBase::SetIsSelected(const bool _value)
+{
+	this->isSelected = _value;
+}
+
+bool EntityBase::GetIsSelected(void) const
+{
+	return isSelected;
 }

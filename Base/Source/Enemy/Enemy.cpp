@@ -208,7 +208,7 @@ void CEnemy::Render(void)
 		if (theDetailLevel != NO_DETAILS)
 		{
 			//cout << theDetailLevel << endl;
-			RenderHelper::RenderMesh(GetLODMesh());
+			RenderHelper::RenderMesh(GetLODMesh(), isSelected);
 		}
 	}
 	modelStack.PopMatrix();

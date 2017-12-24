@@ -142,17 +142,18 @@ void SceneText::Init()
 	}
 
 	/// Create entities into the scene
-	//GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f, -20.0f));
-	//aCube->SetCollider(true);
-	//aCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-	//aCube->InitLOD("cube", "sphere", "cubeSG");
-	//
-	//// Add the pointer to this new entity to the Scene Graph
-	//CSceneNode* theNode = CSceneGraph::GetInstance()->AddNode(aCube);
-	//if (theNode == NULL)
-	//{
-	//	cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
-	//}
+			GenericEntity* aCube = Create::Entity("cube", Vector3(-150, 0.0f, 150));
+			aCube->SetCollider(true);
+			aCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+			aCube->InitLOD("cube", "sphere", "cubeSG");
+			
+			// Add the pointer to this new entity to the Scene Graph
+			CSceneNode* theNode = CSceneGraph::GetInstance()->AddNode(aCube);
+			if (theNode == NULL)
+			{
+				cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
+			}
+	
 	//
 	//GenericEntity* anotherCube = Create::Entity("cube", Vector3(-20.0f, 1.1f, -20.0f));
 	//anotherCube->SetCollider(true);

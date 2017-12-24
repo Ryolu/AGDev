@@ -4,6 +4,7 @@
 #include "../EntityManager.h"
 #include "GraphicsManager.h"
 #include "RenderHelper.h"
+#include "../SpatialPartition/SpatialPartition.h"
 
 CProjectile::CProjectile(void)
 	: modelMesh(NULL)
@@ -102,6 +103,18 @@ CPlayerInfo* CProjectile::GetSource(void) const
 	return theSource;
 }
 
+Vector3 CProjectile::GetGrid()
+{
+	Vector3 temp;
+	int thingX = position.x / CSpatialPartition::GetInstance()->GetxGridSize() * CSpatialPartition::GetInstance()->GetxNumOfGrid() + position.z / CSpatialPartition::GetInstance()->GetzGridSize();
+	int thingZ = (int)position.x /  CSpatialPartition::GetInstance()->GetxGridSize() + position.z / CSpatialPartition::GetInstance()->GetzGridSize() * CSpatialPartition::GetInstance()->GetzNumOfGrid();
+
+	temp.x = ((position.x >= 0) ? (int)((position.x / CSpatialPartition::GetInstance()->GetxGridSize())) : (int)(((position.x - CSpatialPartition::GetInstance()->GetxGridSize()) / CSpatialPartition::GetInstance()->GetxGridSize()))) * CSpatialPartition::GetInstance()->GetxGridSize() + (CSpatialPartition::GetInstance()->GetxGridSize() / 2);
+	temp.z = ((position.z >= 0) ? (int)((position.z / CSpatialPartition::GetInstance()->GetzGridSize())) : (int)(((position.z - CSpatialPartition::GetInstance()->GetzGridSize()) / CSpatialPartition::GetInstance()->GetzGridSize()))) * CSpatialPartition::GetInstance()->GetzGridSize() + (CSpatialPartition::GetInstance()->GetzGridSize() / 2);
+
+	return temp;
+}
+
 // Update the status of this projectile
 void CProjectile::Update(double dt)
 {
@@ -137,7 +150,7 @@ void CProjectile::Render(void)
 	modelStack.PushMatrix();
 	modelStack.Translate(position.x, position.y, position.z);
 	//modelStack.Scale(scale.x, scale.y, scale.z);
-	RenderHelper::RenderMesh(modelMesh);
+	RenderHelper::RenderMesh(modelMesh, isSelected);
 	modelStack.PopMatrix();
 }
 

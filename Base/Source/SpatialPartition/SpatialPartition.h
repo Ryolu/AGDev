@@ -4,6 +4,7 @@
 #include "Grid.h"
 #include "EntityBase.h"
 #include "../FPSCamera.h"
+#include <set>
 
 class CSpatialPartition
 {
@@ -20,10 +21,8 @@ protected:
 	int zGridSize;
 	int xNumOfGrid;
 	int zNumOfGrid;
-	int playerGrid;
-	int playerGridx;
-	int playerGridz;
 	float yOffset;
+	set<Vector3> affectedGrid;
 	std::string _meshName; // Name of the mesh
 
 	// We store the pointer to the Camera so we can get it's position and direction to calculate LOD and visibility
@@ -110,5 +109,6 @@ public:
 	// Check if a CGrid is visible to the camera
 	bool IsVisible(Vector3 theCameraPosition, Vector3 theCameraDirection, const int xIndex, const int zIndex);
 
-	void SetPlayerGrid(float _x, float _z);
+	void AddAffectedGrid(Vector3 _vector);
+	void RemoveAffectedGrid(Vector3 _vector);
 };

@@ -76,6 +76,8 @@ void CPresent::Update(double dt)
 		if (position.y < m_pTerrain->GetTerrainHeight(position) - 10.f + scale.x / 2)
 		{
 			position.y = m_pTerrain->GetTerrainHeight(position) - 10.f + scale.x / 2;
+			for (auto obj : CSpatialPartition::GetInstance()->GetObjects(position, 0))
+				obj->SetIsSelected(true);
 			m_fSpeed = 0.0f;
 			return;
 		}

@@ -38,6 +38,8 @@ public:
 	// Get the source of the projectile
 	CPlayerInfo* GetSource(void) const;
 
+	Vector3 GetGrid();
+
 	// Update the status of this projectile
 	virtual void Update(double dt = 0.0333f);
 	// Render this projectile

@@ -70,8 +70,8 @@ void CGrid::Update(vector<EntityBase*>* migrationList)
 	{
 		Vector3 position = (*it)->GetPosition();
 
-		if (((min.x <= position.x) && (position.x <= max.x)) &&
-			((min.z <= position.z) && (position.z <= max.z)))
+		if (((min.x >= position.x) && (position.x <= max.x)) &&
+			((min.z >= position.z) && (position.z <= max.z)))
 		{
 			// Move on otherwise
 			++it;
