@@ -43,7 +43,7 @@ void CThrow::Discharge(Vector3 position, Vector3 target, CPlayerInfo * _source, 
 			CProjectile* aProjectile = Create::Present("Spiky0",
 				position,
 				(target - position).Normalized(),
-				7.0f,
+				1.0f,
 				multiplier,
 				_source);
 			aProjectile->SetCollider(true);

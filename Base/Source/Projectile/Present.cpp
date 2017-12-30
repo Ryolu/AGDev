@@ -41,19 +41,23 @@ void CPresent::Update(double dt)
 	if (m_bStatus == false)
 		return;
 
+	static bool landed = false;
+	if (landed)
+		m_fLifetime -= (float)dt;
 	// Update TimeLife of projectile. Set to inactive if too long
-	//m_fLifetime -= (float)dt;
 	if (m_fLifetime < 0.0f)
 	{
 		SetStatus(false);
 		SetIsDone(true);	// This method informs EntityManager to remove this instance
 
 							// Check the SpatialPartition to destroy nearby objects
+		for (auto obj : CSpatialPartition::GetInstance()->GetObjects(position, 1.f))
+			obj->SetIsSelected(false);
 		vector<EntityBase*> ExportList = CSpatialPartition::GetInstance()->GetObjects(position, 1.0f);
-		for (int i = 0; i < ExportList.size(); ++i)
+		for (int i = 0; i < CSpatialPartition::GetInstance()->GetObjects(position, 1.0f).size(); ++i)
 		{
 			// Remove from Scene Graph
-			if (CSceneGraph::GetInstance()->DeleteNode(ExportList[i]) == true)
+			if (CSceneGraph::GetInstance()->DeleteNode(CSpatialPartition::GetInstance()->GetObjects(position, 1.0f)[i]) == true)
 			{
 				cout << "*** This Entity removed ***" << endl;
 			}
@@ -76,12 +80,15 @@ void CPresent::Update(double dt)
 		if (position.y < m_pTerrain->GetTerrainHeight(position) - 10.f + scale.x / 2)
 		{
 			position.y = m_pTerrain->GetTerrainHeight(position) - 10.f + scale.x / 2;
-			for (auto obj : CSpatialPartition::GetInstance()->GetObjects(position, 0))
-				obj->SetIsSelected(true);
-			m_fSpeed = 0.0f;
+			for (auto obj : CSpatialPartition::GetInstance()->GetObjects(position, 1.f))
+				if (obj)
+					obj->SetIsSelected(true);
+			m_fSpeed = 0.f;
+			landed = true;
 			return;
 		}
 	}
+
 }
 
 void CPresent::SetTerrain(GroundEntity * m_pTerrain)

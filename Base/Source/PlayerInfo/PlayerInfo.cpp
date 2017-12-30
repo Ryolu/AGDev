@@ -55,8 +55,8 @@ void CPlayerInfo::Init(void)
 	defaultUp.Set(0,1,0);
 
 	// Set the current values
-	position.Set(0, 0, 10);
-	target.Set(0, 0, 0);
+	position.Set(-15, 0, 130);
+	target.Set(-16, 0, 130);
 	up.Set(0, 1, 0);
 
 	// Set Boundary
@@ -66,7 +66,7 @@ void CPlayerInfo::Init(void)
 	// Set the pistol as the primary weapon
 	primaryWeapon = new CThrow();
 	primaryWeapon->Init(); 
-	secondaryWeapon = new CGrenadeThrow();
+	secondaryWeapon = new CPistol();
 	secondaryWeapon->Init();
 
 	multiplier = 0;
